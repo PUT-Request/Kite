@@ -1,0 +1,55 @@
+{{define "mcp_content"}}
+<h3><i class="fas fa-server"></i> MCP Servers</h3>
+<div class="card crd-form">
+<div class="card-label" style="margin-bottom:12px"><i class="fas fa-plus"></i> Add MCP Server</div>
+<div class="form-group"><label>Name</label><input id="mcp-name" placeholder="My Search Server" maxlength="64"></div>
+<div class="form-group"><label>URL</label><input id="mcp-url" placeholder="https://mcp.example.com" maxlength="512"></div>
+<div class="form-group"><label>Auth Type</label><select id="mcp-auth"><option value="none">None</option><option value="bearer">Bearer Token</option></select></div>
+<div class="form-group" id="mcp-token-group" style="display:none"><label>Bearer Token</label><input id="mcp-token" placeholder="sk-..."></div>
+<button class="btn-connect" onclick="addServer()" style="align-self:flex-start"><i class="fas fa-plus"></i> Add & Discover Tools</button>
+</div>
+{{range .Servers}}
+<div class="card crd-form">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div class="card-label">{{.Name}}</div>
+<div style="display:flex;gap:6px">
+<button class="btn-sm" onclick="refreshServer('{{.ID}}')"><i class="fas fa-sync-alt"></i> Refresh</button>
+<button class="btn-danger" onclick="removeServer('{{.ID}}')"><i class="fas fa-trash"></i></button>
+</div>
+</div>
+<div style="font-size:.8rem;color:var(--text-helper);margin:8px 0">{{.URL}} · {{len .DiscoveredTools}} tools</div>
+<div class="tool-list">{{range .DiscoveredTools}}<span>{{.Name}}</span>{{else}}<span style="color:var(--text-helper)">no tools discovered</span>{{end}}</div>
+</div>
+{{else}}
+<div class="card" style="justify-content:center;padding:40px">
+<div style="text-align:center"><i class="fas fa-server" style="font-size:2rem;color:var(--text-helper);margin-bottom:12px;display:block"></i>
+<div class="card-label">No MCP servers yet</div><div style="font-size:.82rem;color:var(--text-helper);margin-top:4px">Add one above to discover tools</div></div>
+</div>
+{{end}}
+<script>
+const t=window.KITE_TOKEN;
+document.getElementById('mcp-auth').onchange=function(){
+ document.getElementById('mcp-token-group').style.display=this.value==='bearer'?'block':'none'
+};
+async function addServer(){
+ const name=document.getElementById('mcp-name').value.trim();
+ const url=document.getElementById('mcp-url').value.trim();
+ const auth=document.getElementById('mcp-auth').value;
+ const token=document.getElementById('mcp-token').value.trim();
+ if(!name||!url){alert('Name and URL required');return}
+ const body={name,url,auth_type:auth,auth_token:token};
+  const r=await fetch('/api/mcp/add?token='+t,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({error:'Invalid response from server'}));
+ if(d.error){alert(d.error)}else{location.reload()}
+}
+async function removeServer(id){
+ if(!confirm('Remove this MCP server?'))return;
+ await fetch('/api/mcp/'+id+'/remove?token='+t,{method:'POST'});
+ location.reload();
+}
+async function refreshServer(id){
+ await fetch('/api/mcp/'+id+'/refresh?token='+t,{method:'POST'});
+ location.reload();
+}
+</script>
+{{end}}

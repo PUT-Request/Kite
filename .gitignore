@@ -1,0 +1,14 @@
+# Secrets
+config.yaml
+
+# Compiled binary
+kite
+
+# Cast directory (session recordings)
+.cast/
+
+# OS files
+.DS_Store
+
+# Test files
+*.com.txt

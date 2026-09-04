@@ -1,0 +1,33 @@
+{{define "home_content"}}
+<div class="home-top">
+<div><h3>Welcome back</h3><p class="subtitle">Your Kite dashboard</p></div>
+<div class="home-clock" id="clock">--:--</div>
+</div>
+<div class="home-grid">
+<a class="home-tile" href="/dashboard/integrations?token={{.Token}}">
+<span class="icon"><i class="fas fa-plug"></i></span>
+<span class="count">{{.IntegrationCount}}</span>
+<span class="label">Integrations</span>
+</a>
+<a class="home-tile" href="/dashboard/email?token={{.Token}}">
+<span class="icon"><i class="fas fa-envelope"></i></span>
+<span class="count">{{.EmailConnected}}</span>
+<span class="label">Email</span>
+</a>
+<a class="home-tile" href="/dashboard/mcp?token={{.Token}}">
+<span class="icon"><i class="fas fa-server"></i></span>
+<span class="count">{{.MCPCount}}</span>
+<span class="label">MCP Servers</span>
+</a>
+<a class="home-tile" href="/dashboard/third-party?token={{.Token}}">
+<span class="icon"><i class="fas fa-link"></i></span>
+<span class="count">{{.ThirdPartyCount}}</span>
+<span class="label">Third Party</span>
+</a>
+<a class="home-tile" href="/dashboard/rss?token={{.Token}}">
+<span class="icon"><i class="fas fa-rss"></i></span>
+<span class="count">{{.RSSCount}}</span>
+<span class="label">RSS Feeds</span>
+</a>
+</div>
+{{end}}

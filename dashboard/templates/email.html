@@ -1,0 +1,42 @@
+{{define "email_content"}}
+<h3><i class="fas fa-envelope"></i> Email</h3>
+{{if .EmailConfigured}}
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fas fa-envelope"></i></div>
+<div><div class="card-label"><i class="fas fa-check-circle"></i> {{.EmailAddress}}</div><div class="card-status status-on">Inbox: {{.EmailUnread}} unread</div></div>
+</div>
+<button class="btn-disconnect" onclick="disableEmail()"><i class="fas fa-unlink"></i> Disable</button>
+</div>
+{{else}}
+<div class="card crd-form">
+<div class="card-label" style="margin-bottom:12px"><i class="fas fa-cog"></i> Configure Email</div>
+<div class="form-group"><label>Username</label><input id="email-username" placeholder="your-username" maxlength="32"></div>
+<div class="form-group"><label>Address</label>
+<div style="display:flex;align-items:center;gap:4px">
+<span id="email-preview" style="font-size:.88rem;color:var(--text-helper)">your-username@{{.Domain}}</span>
+</div>
+</div>
+<button class="btn-connect" onclick="configureEmail()" style="align-self:flex-start"><i class="fas fa-check"></i> Enable Email</button>
+</div>
+{{end}}
+<script>
+const t=window.KITE_TOKEN;
+document.getElementById('email-username')?.addEventListener('input',function(){
+ const preview=document.getElementById('email-preview');
+ preview.textContent=this.value ? this.value+'@{{.Domain}}' : 'your-username@{{.Domain}}';
+});
+async function configureEmail(){
+ const u=document.getElementById('email-username').value.trim();
+ if(!u){alert('Enter a username');return}
+ const r=await fetch('/api/email/configure?token='+t,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});
+ const d=await r.json();
+ if(d.error){alert(d.error)}else{location.reload()}
+}
+async function disableEmail(){
+ if(!confirm('Disable email?'))return;
+ await fetch('/api/email/disable?token='+t,{method:'POST'});
+ location.reload();
+}
+</script>
+{{end}}

@@ -1,0 +1,31 @@
+{{define "integrations_content"}}
+<h3><i class="fas fa-plug"></i> Integrations</h3>
+{{if .Expired}}<div class="alert"><i class="fas fa-exclamation-triangle"></i> Link expired or invalid. Ask Kite for a new /dashboard link.</div>{{end}}
+{{if .Connected}}<div class="alert success"><i class="fas fa-check-circle"></i> {{.Connected}} connected successfully!</div>{{end}}
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fas fa-file-alt"></i></div>
+<div class="card-label">Notion</div>
+</div>
+{{if .NotionConnected}}<button class="btn-disconnect" onclick="disc('notion')"><i class="fas fa-unlink"></i> Disconnect</button>{{else}}<a class="btn-connect" href="javascript:conn('notion')"><i class="fas fa-plug"></i> Connect</a>{{end}}
+</div>
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fab fa-github"></i></div>
+<div class="card-label">GitHub</div>
+</div>
+{{if .GitHubConnected}}<button class="btn-disconnect" onclick="disc('github')"><i class="fas fa-unlink"></i> Disconnect</button>{{else}}<a class="btn-connect" href="javascript:conn('github')"><i class="fas fa-plug"></i> Connect</a>{{end}}
+</div>
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fab fa-dropbox"></i></div>
+<div class="card-label">Dropbox</div>
+</div>
+{{if .DropboxConnected}}<button class="btn-disconnect" onclick="disc('dropbox')"><i class="fas fa-unlink"></i> Disconnect</button>{{else}}<a class="btn-connect" href="javascript:conn('dropbox')"><i class="fas fa-plug"></i> Connect</a>{{end}}
+</div>
+<script>
+const t=window.KITE_TOKEN;
+function conn(p){window.location='/oauth/'+p+'/login?token='+t}
+async function disc(p){await fetch('/api/integrations/'+p+'/disconnect?token='+t,{method:'POST'});location.reload()}
+</script>
+{{end}}

@@ -1,0 +1,49 @@
+{{define "third_party_content"}}
+<h3><i class="fas fa-link"></i> Third Party Servers</h3>
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fas fa-bookmark"></i></div>
+<div><div class="card-label">BM API</div><div class="card-status" style="color:var(--text-helper)">Open-source bookmark manager with search</div></div>
+</div>
+<button class="btn-connect" onclick="showBMForm()"><i class="fas fa-plug"></i> Connect</button>
+</div>
+<div id="bm-form" class="card crd-form" style="display:none">
+<div class="form-group"><label>Server Name</label><input id="bm-name" placeholder="My Bookmarks" maxlength="64"></div>
+<div class="form-group"><label>Server URL</label><input id="bm-url" placeholder="https://bm.{{.Domain}}" maxlength="512"></div>
+<div class="form-group"><label>API Key</label><input id="bm-key" placeholder="sk-..." maxlength="256"></div>
+<div style="display:flex;gap:8px">
+<button class="btn-connect" onclick="addServer('bm_api')"><i class="fas fa-check"></i> Verify & Connect</button>
+<button class="btn-disconnect" onclick="document.getElementById('bm-form').style.display='none'">Cancel</button>
+</div>
+</div>
+{{if .Servers}}
+<h3 style="margin-top:24px"><i class="fas fa-check-circle"></i> Connected</h3>
+{{range .Servers}}
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fas fa-bookmark"></i></div>
+<div><div class="card-label">{{.Name}}</div><div class="card-status" style="font-size:.78rem;color:var(--text-helper)">{{.URL}}</div></div>
+</div>
+<button class="btn-disconnect" onclick="removeServer('{{.ID}}')"><i class="fas fa-unlink"></i> Disconnect</button>
+</div>
+{{end}}
+{{end}}
+<script>
+const t=window.KITE_TOKEN;
+function showBMForm(){document.getElementById('bm-form').style.display='block'}
+async function addServer(type){
+ const name=document.getElementById('bm-name').value.trim();
+ const url=document.getElementById('bm-url').value.trim();
+ const key=document.getElementById('bm-key').value.trim();
+ if(!name||!url||!key){alert('All fields required');return}
+ const r=await fetch('/api/third-party/add?token='+t,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,name,url,api_key:key})});
+ const d=await r.json();
+ if(d.error){alert(d.error)}else{location.reload()}
+}
+async function removeServer(id){
+ if(!confirm('Remove this server?'))return;
+ await fetch('/api/third-party/'+id+'/remove?token='+t,{method:'POST'});
+ location.reload();
+}
+</script>
+{{end}}

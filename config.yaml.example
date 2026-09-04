@@ -1,0 +1,79 @@
+discord_token: "YOUR_DISCORD_TOKEN"
+
+llm_endpoint: "https://your-llm-endpoint.com/v1"
+llm_api_key: "your-api-key"
+llm_model: "your-model"
+reasoning_level: "medium"
+
+llm_fallback_1_endpoint: ""
+llm_fallback_1_api_key: ""
+llm_fallback_1_model: ""
+
+llm_fallback_2_endpoint: ""
+llm_fallback_2_api_key: ""
+llm_fallback_2_model: ""
+temperature: 0.7
+
+trigger_check_interval_sec: 60
+memory_compress_threshold: 100
+sandbox_command_timeout_sec: 60
+sandbox_max_output_bytes: 65536
+sandbox_read_chunk_size: 4096
+sandbox_write_chunk_size: 8192
+exec_loop_max_iterations: 30
+interaction_loops_max: 15
+
+typing_wpm_min: 40
+typing_wpm_max: 50
+strip_reasoning: true
+
+vision_enabled: true
+download_cleanup_hours: 42
+reactions_enabled: true
+
+dashboard_port: 8080
+dashboard_domain: "your-domain.com"
+
+site_public_path: "public/sites"
+smtp_port: 25
+smtp_domain: "your-domain.com"
+
+oauth:
+  state_secret: "GENERATE_A_RANDOM_SECRET"
+  redirect_base: "https://your-domain.com"
+  notion:
+    client_id: ""
+    client_secret: ""
+  github:
+    client_id: ""
+    client_secret: ""
+  dropbox:
+    client_id: ""
+    client_secret: ""
+
+searxng_endpoints:
+  - "http://your-searxng-instance:8080"
+
+search_timeout_sec: 5
+
+alpine_rootfs_path: "alpine-rootfs.tar.gz"
+shared_rootfs_path: "shared-rootfs"
+sandbox_max_disk_mb: 500
+sandbox_dns:
+  - "8.8.8.8"
+  - "1.1.1.1"
+sandbox_preinstall_pkgs:
+  - "python3"
+  - "nodejs"
+  - "npm"
+  - "git"
+  - "curl"
+  - "openssh-client"
+data_dir: "data"
+
+system_prompt_extra: ""
+
+guild_id: "YOUR_GUILD_ID"
+channel_id: "YOUR_CHANNEL_ID"
+admin_user_id: "YOUR_ADMIN_USER_ID"
+discord_invite_link: "https://discord.gg/YOUR_INVITE"

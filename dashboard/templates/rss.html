@@ -1,0 +1,49 @@
+{{define "rss_content"}}
+<h3><i class="fas fa-rss"></i> RSS Feeds</h3>
+<div class="card crd-form">
+<div class="card-label" style="margin-bottom:12px"><i class="fas fa-plus"></i> Add RSS Feed</div>
+<div class="form-group"><label>Name</label><input id="rss-name" placeholder="My Blog" maxlength="64"></div>
+<div class="form-group"><label>Feed URL</label><input id="rss-url" placeholder="https://example.com/rss" maxlength="512"></div>
+<button class="btn-connect" onclick="addFeed()" style="align-self:flex-start"><i class="fas fa-plus"></i> Add Feed</button>
+</div>
+{{if .RSSFeeds}}
+{{range .RSSFeeds}}
+<div class="card">
+<div class="card-left">
+<div class="card-icon"><i class="fas fa-rss"></i></div>
+<div><div class="card-label">{{.Name}}</div>
+<div class="card-status" style="font-size:.78rem;color:var(--text-helper)">{{.URL}} · {{if not .LastFetch.IsZero}}last fetched {{.LastFetch.Format "Jan 2, 2006 15:04"}}{{else}}not fetched yet{{end}}</div></div>
+</div>
+<div style="display:flex;gap:6px">
+<button class="btn-sm" onclick="fetchFeed('{{.ID}}')"><i class="fas fa-sync-alt"></i> Fetch</button>
+<button class="btn-danger" onclick="removeFeed('{{.ID}}')"><i class="fas fa-trash"></i></button>
+</div>
+</div>
+{{end}}
+{{else}}
+<div class="card" style="justify-content:center;padding:40px">
+<div style="text-align:center"><i class="fas fa-rss" style="font-size:2rem;color:var(--text-helper);margin-bottom:12px;display:block"></i>
+<div class="card-label">No RSS feeds yet</div><div style="font-size:.82rem;color:var(--text-helper);margin-top:4px">Add a feed above to start monitoring</div></div>
+</div>
+{{end}}
+<script>
+const t=window.KITE_TOKEN;
+async function addFeed(){
+ const name=document.getElementById('rss-name').value.trim();
+ const url=document.getElementById('rss-url').value.trim();
+ if(!name||!url){alert('Name and URL required');return}
+ const r=await fetch('/api/rss/add?token='+t,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,url})});
+ const d=await r.json();
+ if(d.error){alert(d.error)}else{location.reload()}
+}
+async function removeFeed(id){
+ if(!confirm('Remove this feed?'))return;
+ await fetch('/api/rss/'+id+'/remove?token='+t,{method:'POST'});
+ location.reload();
+}
+async function fetchFeed(id){
+ await fetch('/api/rss/'+id+'/fetch?token='+t,{method:'POST'});
+ location.reload();
+}
+</script>
+{{end}}

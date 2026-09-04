@@ -1,0 +1,7 @@
+# git metadata
+.git/
+# compiled binary
+kite
+# os files
+.DS_Store
+*.log
